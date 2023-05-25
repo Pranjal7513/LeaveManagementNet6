@@ -1,5 +1,6 @@
 ﻿using LeaveManagement.Contracts;
 using LeaveManagement.Data;
+using LeaveManagement.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagement.Repository
@@ -12,13 +13,18 @@ namespace LeaveManagement.Repository
         {
             this.context = context;
         }
+
         public async Task<T> AddSync(T entity)
         {
-           await context.AddAsync(entity);
-           await context.SaveChangesAsync();
-           return entity;
+            await context.AddAsync(entity);
+            await context.SaveChangesAsync();
+            return entity;
         }
-
+        public async Task AddRangeSync(List<T> entities)
+        {
+            await context.AddRangeAsync(entities);
+            await context.SaveChangesAsync();
+        }
         public async Task DeleteAsync(int id)
         {
             var entity = await GetAsync(id);
@@ -37,9 +43,9 @@ namespace LeaveManagement.Repository
             return await context.Set<T>().ToListAsync();
         }
 
-        public async Task<T> GetAsync(int? id)
+        public async Task<T?> GetAsync(int? id)
         {
-            if (id== null)
+            if (id == null)
             {
                 return null;
             }
